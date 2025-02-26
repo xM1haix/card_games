@@ -56,20 +56,22 @@ enum CardValue {
 }
 
 class CardWidget extends StatelessWidget {
+  final int leftMargin;
   final PlayingCards card;
-  const CardWidget(this.card, {super.key});
+  const CardWidget(this.card, {super.key, this.leftMargin = 0});
 
   @override
   Widget build(BuildContext context) {
     final size = 100.0;
     return Container(
+      margin: EdgeInsets.only(left: leftMargin * size / 2),
       alignment: Alignment.center,
       height: size * 1.54,
       width: size,
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: Colors.black, width: 1),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(size / 20),
       ),
       child: Text(
         card.toString(),
