@@ -3,41 +3,28 @@ import 'dart:math';
 import 'package:playing_cards/playing_cards.dart';
 
 class Deck {
-  final GameType gameType;
+  int numOfPlayers;
   List<PlayingCard> _cards = [];
-  final int numOfPlayers;
-  Deck(this.gameType, this.numOfPlayers) {
-    switch (gameType) {
-      case GameType.macau:
-        if (numOfPlayers < 2) throw "Not enough players";
-        if (numOfPlayers > 10) throw "too many players";
-        _cards = standardFiftyFourCardDeck();
-        break;
-      case GameType.wars:
-        if (numOfPlayers < 2) throw "Not enough players";
-        if (numOfPlayers > 26) throw "too many players";
-        _cards = standardFiftyTwoCardDeck();
-        break;
-      default:
-    }
-    if (numOfPlayers < 2) throw "Not enough players";
-    if (numOfPlayers > 26) throw "too many players";
-    for (var v in SUITED_VALUES) {
-      for (var c in STANDARD_SUITS) {
-        _cards.add(PlayingCard(c, v));
-      }
-    }
+  Deck(GameData gameData, this.numOfPlayers) {
+    _cards = gameData.deck(numOfPlayers);
   }
-  // factory Deck.macau(int numOfPlayers) {
-  //   if (numOfPlayers < 2) throw "Not enough players";
-  //   if (numOfPlayers > 10) throw "too many players";
-  //   return Deck(standardFiftyFourCardDeck(), numOfPlayers);
-  // }
-
-  // factory Deck.rentz(int players) => _trickTaking(players);
-  // factory Deck.theSeventh() => _trickTaking(4);
-  // factory Deck.whist(int players) => _trickTaking(players);
   List<PlayingCard> get cards => _cards;
+  List<List<PlayingCard>> deal() {
+    print(cards.length / numOfPlayers);
+    print(cards.length ~/ numOfPlayers);
+    if (cards.length / numOfPlayers != (cards.length ~/ numOfPlayers)) {
+      throw "Something is wrong as number of cards do not match the number of players";
+    }
+    final List<List<PlayingCard>> hands = List.generate(
+      numOfPlayers,
+      (_) => [],
+    );
+    for (int i = 0; i < _cards.length; i++) {
+      hands[i % numOfPlayers].add(_cards[i]);
+    }
+    return hands;
+  }
+
   void shuffle() {
     final List<PlayingCard> newCards = [];
     while (_cards.isNotEmpty) {
@@ -50,7 +37,7 @@ class Deck {
 }
 
 class GameData {
-  late List<PlayingCard> Function(int x) _deck;
+  late List<PlayingCard> Function(int numberOfPlayers) _deck;
   late int _minPlayers, _maxPlayers;
   final GameType gameType;
   GameData(this.gameType) {
@@ -88,6 +75,16 @@ class GameData {
         break;
     }
   }
+  List<PlayingCard> Function(int numberOfPlayers) get deck => _deck;
+  void checkPlayerNumber(int currentPlayers) {
+    if (currentPlayers <= _minPlayers) {
+      throw "Not enough players, required minimum of $_minPlayers";
+    }
+    if (currentPlayers >= _maxPlayers) {
+      throw "Too many players, max allowed players is $_maxPlayers";
+    }
+  }
+
   static List<PlayingCard> _trickTaking(int players) {
     final List<PlayingCard> result = [];
     final x = [
@@ -113,33 +110,4 @@ class GameData {
   }
 }
 
-class GamePlayers {
-  final int minPlayers, maxPlayers;
-  GamePlayers(this.minPlayers, this.maxPlayers);
-  void checkNumOfPlayers(int currentPlayers) {
-    if (currentPlayers <= minPlayers) {
-      throw "Not enough players, required minimum of $minPlayers";
-    }
-    if (currentPlayers >= maxPlayers) {
-      throw "Too many players, max allowed players is $maxPlayers";
-    }
-  }
-}
-
-enum GameType {
-  wars,
-  macau,
-  rentz,
-  theSeventh,
-  whist,
-  trickTaking;
-
-  void gameMode(int numOfPlayers) => (switch (this) {
-    GameType.wars => GamePlayers(2, 26),
-    GameType.macau => GamePlayers(2, 10),
-    GameType.rentz => GamePlayers(3, 6),
-    GameType.theSeventh => GamePlayers(2, 8),
-    GameType.whist => GamePlayers(3, 6),
-    GameType.trickTaking => GamePlayers(3, 6),
-  }).checkNumOfPlayers(numOfPlayers);
-}
+enum GameType { wars, macau, rentz, theSeventh, whist, trickTaking }
