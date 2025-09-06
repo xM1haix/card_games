@@ -31,9 +31,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late Deck _deck;
-  final double _cardSize = 200;
-  List<List<PlayingCard>> dealtCards = [];
-  int _players = 4;
+  final _cardSize = 200.0;
+  List<List<PlayingCard>> _dealtCards = [];
+  var _players = 4;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,17 +41,11 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text("HOME"),
         actions: [
           IconButton(
-            onPressed:
-                () => setState(() {
-                  _deck.shuffle();
-                }),
+            onPressed: () => setState(() => _deck.shuffle()),
             icon: Icon(Icons.shuffle),
           ),
           IconButton(
-            onPressed:
-                () => setState(() {
-                  dealtCards = _deck.deal();
-                }),
+            onPressed: () => setState(() => _dealtCards = _deck.deal()),
             icon: Icon(Icons.splitscreen),
           ),
         ],
@@ -76,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
             runSpacing: 10,
             spacing: 200,
             children:
-                dealtCards
+                _dealtCards
                     .map(
                       (p) => Stack(
                         children:
