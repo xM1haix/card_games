@@ -1,8 +1,8 @@
-import 'dart:math';
+import "dart:math";
 
-import 'package:card_games/deck.dart';
-import 'package:flutter/material.dart';
-import 'package:playing_cards/playing_cards.dart';
+import "package:card_games/deck.dart";
+import "package:flutter/material.dart";
+import "package:playing_cards/playing_cards.dart";
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         primaryColor: Colors.green,
-        appBarTheme: AppBarTheme(centerTitle: true),
+        appBarTheme: const AppBarTheme(centerTitle: true),
       ),
       home: const MyHomePage(),
     );
@@ -38,15 +38,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("HOME"),
+        title: const Text("HOME"),
         actions: [
           IconButton(
             onPressed: () => setState(() => _deck.shuffle()),
-            icon: Icon(Icons.shuffle),
+            icon: const Icon(Icons.shuffle),
           ),
           IconButton(
             onPressed: () => setState(() => _dealtCards = _deck.deal()),
-            icon: Icon(Icons.splitscreen),
+            icon: const Icon(Icons.splitscreen),
           ),
         ],
       ),
@@ -109,7 +109,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _init([int? players]) {
     setState(() {
-      if (players != null) _players = players;
+      if (players != null) {
+        _players = players;
+      }
       _deck = Deck(GameData(GameType.rentz), _players);
     });
   }

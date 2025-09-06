@@ -1,6 +1,6 @@
-import 'dart:math';
+import "dart:math";
 
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 enum CardColor {
   blackSpade,
@@ -15,10 +15,10 @@ enum CardColor {
     CardColor.club => Colors.red,
   };
   String get simbol => switch (this) {
-    CardColor.blackSpade => '♠',
-    CardColor.redHeart => '♥',
-    CardColor.diamonds => '♦',
-    CardColor.club => '♣',
+    CardColor.blackSpade => "♠",
+    CardColor.redHeart => "♥",
+    CardColor.diamonds => "♦",
+    CardColor.club => "♣",
   };
 }
 
@@ -39,30 +39,30 @@ enum CardValue {
 
   int get i => CardValue.values.indexOf(this);
   String get text => switch (this) {
-    CardValue.two => '2',
-    CardValue.three => '3',
-    CardValue.four => '4',
-    CardValue.five => '5',
-    CardValue.six => '6',
-    CardValue.seven => '7',
-    CardValue.eight => '8',
-    CardValue.nine => '9',
-    CardValue.ten => '10',
-    CardValue.J => 'J',
-    CardValue.Q => 'Q',
-    CardValue.K => 'K',
-    CardValue.A => 'A',
+    CardValue.two => "2",
+    CardValue.three => "3",
+    CardValue.four => "4",
+    CardValue.five => "5",
+    CardValue.six => "6",
+    CardValue.seven => "7",
+    CardValue.eight => "8",
+    CardValue.nine => "9",
+    CardValue.ten => "10",
+    CardValue.J => "J",
+    CardValue.Q => "Q",
+    CardValue.K => "K",
+    CardValue.A => "A",
   };
 }
 
 class CardWidget extends StatelessWidget {
+  const CardWidget(this.card, {super.key, this.leftMargin = 0});
   final int leftMargin;
   final PlayingCards card;
-  const CardWidget(this.card, {super.key, this.leftMargin = 0});
 
   @override
   Widget build(BuildContext context) {
-    final size = 100.0;
+    const size = 100.0;
     return Container(
       margin: EdgeInsets.only(left: leftMargin * size / 2),
       alignment: Alignment.center,
@@ -70,7 +70,7 @@ class CardWidget extends StatelessWidget {
       width: size,
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Colors.black, width: 1),
+        border: Border.all(),
         borderRadius: BorderRadius.circular(size / 20),
       ),
       child: Text(
@@ -85,20 +85,23 @@ class DeckCard {
   List<PlayingCards> cards = [];
 }
 
+@immutable
 class PlayingCards {
+  const PlayingCards(this.color, this.value);
   static List<PlayingCards> ordered = _genOrdered();
-  static List<PlayingCards> get shuffle => _shuffle();
 
+  static List<PlayingCards> get shuffle => _shuffle();
   final CardColor color;
   final CardValue value;
-  PlayingCards(this.color, this.value);
   @override
   int get hashCode => color.hashCode ^ value.hashCode;
   Color get textColor => color.color;
 
   @override
   bool operator ==(Object other) {
-    if (other is! PlayingCards) return false;
+    if (other is! PlayingCards) {
+      return false;
+    }
     return color == other.color && value == other.value;
   }
 
@@ -111,9 +114,9 @@ class PlayingCards {
   }
 
   static List<PlayingCards> _genOrdered() {
-    final List<PlayingCards> result = [];
-    for (var v in CardValue.values) {
-      for (var c in CardColor.values) {
+    final result = <PlayingCards>[];
+    for (final v in CardValue.values) {
+      for (final c in CardColor.values) {
         result.add(PlayingCards(c, v));
       }
     }
@@ -122,7 +125,7 @@ class PlayingCards {
 
   static List<PlayingCards> _shuffle() {
     final x = _genOrdered();
-    final List<PlayingCards> result = [];
+    final result = <PlayingCards>[];
     while (x.isNotEmpty) {
       final id = Random().nextInt(x.length);
       result.add(x[id]);
