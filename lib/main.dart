@@ -8,7 +8,9 @@ void main() {
   runApp(const MyApp());
 }
 
+//////Main skelethon of the app
 class MyApp extends StatelessWidget {
+  ///
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
+///Home page
 class MyHomePage extends StatefulWidget {
+  ///
   const MyHomePage({super.key});
   @override
   State<MyHomePage> createState() => _MyHomePageState();

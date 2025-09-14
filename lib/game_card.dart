@@ -2,18 +2,29 @@ import "dart:math";
 
 import "package:flutter/material.dart";
 
+/// Card color
 enum CardColor {
+  ///https://en.wikipedia.org/wiki/Spades_(suit)
   blackSpade,
+
+  ///https://en.wikipedia.org/wiki/Hearts_(suit)
   redHeart,
+
+  ///https://en.wikipedia.org/wiki/Diamonds_(suit)
   diamonds,
+
+  ///https://en.wikipedia.org/wiki/Clubs_(suit)
   club;
 
+  ///Generate the [Color] based on the [CardColor]
   Color get color => switch (this) {
     CardColor.blackSpade => Colors.black,
     CardColor.redHeart => Colors.red,
     CardColor.diamonds => Colors.black,
     CardColor.club => Colors.red,
   };
+
+  ///Generate the [String] based on the [CardColor]
   String get simbol => switch (this) {
     CardColor.blackSpade => "♠",
     CardColor.redHeart => "♥",
@@ -22,22 +33,52 @@ enum CardColor {
   };
 }
 
+///The value of the card
 enum CardValue {
+  /// 2
   two,
+
+  /// 3
   three,
+
+  /// 4
   four,
+
+  /// 5
   five,
+
+  /// 6
   six,
+
+  /// 7
   seven,
+
+  /// 8
   eight,
+
+  /// 9
   nine,
+
+  /// 10
   ten,
+
+  /// J
   J,
+
+  /// Q
   Q,
+
+  /// K
   K,
+
+  /// A
   A;
 
+  ///
+
   int get i => CardValue.values.indexOf(this);
+
+  ///Generate the [String] based on the [CardValue]
   String get text => switch (this) {
     CardValue.two => "2",
     CardValue.three => "3",
@@ -55,10 +96,16 @@ enum CardValue {
   };
 }
 
+///Widget showing the [GameCard]
 class CardWidget extends StatelessWidget {
+  ///It require the [card] as [GameCard] and the [leftMarin] as int default is 0
   const CardWidget(this.card, {super.key, this.leftMargin = 0});
+
+  ///The margin at left
   final int leftMargin;
-  final PlayingCards card;
+
+  ///The card it self
+  final GameCard card;
 
   @override
   Widget build(BuildContext context) {
@@ -81,25 +128,32 @@ class CardWidget extends StatelessWidget {
   }
 }
 
-class DeckCard {
-  List<PlayingCards> cards = [];
-}
-
 @immutable
-class PlayingCards {
-  const PlayingCards(this.color, this.value);
-  static List<PlayingCards> ordered = _genOrdered();
+///Object which represent the final GameCard
+class GameCard {
+  ///Create the [GameCard] based on the [color] and the [value]
+  const GameCard(this.color, this.value);
 
-  static List<PlayingCards> get shuffle => _shuffle();
+  ///
+  static List<GameCard> ordered = _genOrdered();
+
+  ///Shuffle the [GameCard]
+  static List<GameCard> get shuffle => _shuffle();
+
+  ///The [color] of the [GameCard]
   final CardColor color;
+
+  ///The [value] of the [GameCard]
   final CardValue value;
   @override
   int get hashCode => color.hashCode ^ value.hashCode;
+
+  ///Getting the [textColor] based on the color of the [GameCard]
   Color get textColor => color.color;
 
   @override
   bool operator ==(Object other) {
-    if (other is! PlayingCards) {
+    if (other is! GameCard) {
       return false;
     }
     return color == other.color && value == other.value;
@@ -108,24 +162,25 @@ class PlayingCards {
   @override
   String toString() => value.text + color.simbol;
 
-  static PlayingCards randomCard() {
+  ///
+  static GameCard randomCard() {
     final cards = _genOrdered();
     return cards[Random().nextInt(cards.length)];
   }
 
-  static List<PlayingCards> _genOrdered() {
-    final result = <PlayingCards>[];
+  static List<GameCard> _genOrdered() {
+    final result = <GameCard>[];
     for (final v in CardValue.values) {
       for (final c in CardColor.values) {
-        result.add(PlayingCards(c, v));
+        result.add(GameCard(c, v));
       }
     }
     return result;
   }
 
-  static List<PlayingCards> _shuffle() {
+  static List<GameCard> _shuffle() {
     final x = _genOrdered();
-    final result = <PlayingCards>[];
+    final result = <GameCard>[];
     while (x.isNotEmpty) {
       final id = Random().nextInt(x.length);
       result.add(x[id]);
